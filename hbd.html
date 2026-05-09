@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Birthday Surprise! 🎂</title>
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body, html {
+            margin: 0; padding: 0;
+            height: 100%; overflow: hidden;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle at center, #1b4d89 0%, #05162a 100%);
+        }
+
+        /* --- STICKER STYLES --- */
+        .sticker {
+            position: absolute;
+            width: 80px; /* Ukuran stiker */
+            height: auto;
+            z-index: 60;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            animation: floatSticker 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        /* Posisi masing-masing stiker */
+        .s1 { top: -20px; left: -30px; transform: rotate(-15deg); }
+        .s2 { bottom: 20px; right: -80px; width: 100px; transform: rotate(10deg); animation-delay: 0.5s; }
+        .s3 { top: 20px; right: -40px; transform: rotate(15deg); animation-delay: 1s; }
+        .s4 { bottom: 60px; left: -75px; transform: rotate(10deg); animation-delay: 1.5s; }
+
+        @keyframes floatSticker {
+            0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+            50% { transform: translateY(-15px) rotate(var(--rot, 0deg)); }
+        }
+
+        /* --- LANDING 1: AMPLOP --- */
+        #landing-1 {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 300; transition: 0.8s;
+            text-align: center; padding: 20px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* --- LANDING 2: PRANK --- */
+        #landing-prank {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffffff;
+            display: none; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 250; text-align: center;
+            transition: opacity 2s;
+        }
+        .sticker-wle { font-size: 5em; margin-bottom: 10px; animation: shakePrank 0.5s infinite; }
+
+        @keyframes shakePrank { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
+
+        /* --- SISTEM TIRAI --- */
+        .curtain-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; z-index: 100; visibility: hidden;
+        }
+        .curtain-left, .curtain-right {
+            width: 50.5%; height: 100%; background: #d63031;
+            background-image: repeating-linear-gradient(to right, #d63031, #d63031 15px, #b22222 30px);
+            transition: transform 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .open-left { transform: translateX(-100%); }
+        .open-right { transform: translateX(100%); }
+
+        /* --- PREMIUM BLUE CAKE --- */
+        .cake-container {
+            position: relative; width: 180px; height: 220px;
+            margin: 0 auto 20px auto; display: flex; justify-content: center;
+            align-items: center;
+            cursor: pointer; z-index: 20; transition: transform 0.2s;
+        }
+        .cake-container:active { transform: scale(0.9); }
+
+        .cake-layer {
+            position: absolute; border-radius: 50% / 15%; 
+            transition: transform 0.8s cubic-bezier(0.17, 0.67, 0.45, 1.3); 
+            transform: translateY(-100vh);
+        }
+        .cake-layer::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 35%;
+            border-radius: 50%; z-index: 5; background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%);
+        }
+        .drip {
+            position: absolute; top: 15%; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 0%, #ffffff 14px, transparent 15px),
+                radial-gradient(circle at 40% 0%, #ffffff 18px, transparent 19px),
+                radial-gradient(circle at 65% 0%, #ffffff 12px, transparent 13px),
+                radial-gradient(circle at 85% 0%, #ffffff 20px, transparent 21px);
+            filter: drop-shadow(0 3px 2px rgba(0,0,0,0.2)); z-index: 4;
+        }
+        .layer-bottom { width: 180px; height: 80px; bottom: 0; z-index: 1; background: linear-gradient(to right, #0a2342, #1b4d89 50%, #0a2342); }
+        .layer-bottom::before { background: radial-gradient(#2d6bb3, #0a2342); border: 1px solid #05162a; }
+        
+        .layer-middle { width: 140px; height: 70px; bottom: 60px; z-index: 2; background: linear-gradient(to right, #114b94, #2a75d1 50%, #114b94); }
+        .layer-middle::before { background: radial-gradient(#5da2f2, #114b94); border: 1px solid #0a3366; }
+        
+        .layer-top { width: 90px; height: 60px; bottom: 120px; z-index: 3; background: linear-gradient(to right, #2d7dd2, #6bb5ff 50%, #2d7dd2); }
+        .layer-top::before { background: radial-gradient(#b3d9ff, #2d7dd2); border: 1px solid #1a5699; }
+
+        .active-content .layer-bottom { transform: translateY(0); transition-delay: 0.3s; }
+        .active-content .layer-middle { transform: translateY(0); transition-delay: 0.6s; }
+        .active-content .layer-top { transform: translateY(0); transition-delay: 0.9s; }
+
+        .candle { 
+            width: 8px; height: 40px; 
+            background: linear-gradient(to bottom, #ffffff, #9d9d9d); 
+            border-radius: 4px; 
+            position: absolute; 
+            bottom: 170px; 
+            z-index: 10; 
+            opacity: 0; 
+            transition: opacity 0.5s 1.3s; 
+        }
+        .active-content .candle { opacity: 1; }
+
+        .flame { 
+            width: 10px; height: 24px; 
+            background: radial-gradient(#ffeb3b, #ff9800, #ff0101); 
+            border-radius: 50% 50% 20% 20%; 
+            position: absolute; 
+            top: -22px; left: -1.2px; 
+            animation: flicker 0.1s ease-in-out infinite alternate; 
+            transition: transform 0.2s, filter 0.2s; 
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.7); 
+        }
+
+        .active-flame { transform: scale(1.8) translateY(-2px); filter: brightness(1.5); }
+
+        @keyframes flicker {
+            0% { transform: rotate(-1deg) scaleY(1); opacity: 0.95; }
+            50% { transform: rotate(-1.5deg) scaleY(0.95); border-radius: 60% 40% 25% 15%; }
+            100% { transform: rotate(-0.5deg) scaleY(1); opacity: 0.96; }
+        }
+
+        .balloon-wrap { position: absolute; bottom: -200px; animation: float-up 10s linear infinite, sway 3s ease-in-out infinite alternate; z-index: 1; pointer-events: none; }
+        .balloon { width: 45px; height: 60px; border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; position: relative; opacity: 0.7; box-shadow: inset -3px -3px 10px rgba(0,0,0,0.2); }
+        .string { width: 1px; height: 70px; background: rgba(255,255,255,0.3); position: absolute; left: 22px; top: 60px; }
+        
+        @keyframes float-up { to { transform: translateY(-130vh); } }
+        @keyframes sway { from { margin-left: -15px; } to { margin-left: 15px; } }
+        
+        .main-content { height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; opacity: 0; transition: 1s; padding: 20px; z-index: 50; position: relative; }
+        
+        .message-box { 
+            background: rgba(255, 255, 255, 0.98); 
+            padding: 25px 15px; 
+            border-radius: 30px; 
+            border: 3px solid #ffffff; 
+            width: 100%; 
+            max-width: 350px; 
+            position: relative; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+        }
+        h1 { font-size: 1.5rem; margin: 10px 0; }
+        p { font-size: 0.95rem; line-height: 1.4; color: #444; }
+
+        .btn-common { 
+            padding: 12px 30px; 
+            font-size: 1rem; 
+            background: #ff6b6b; 
+            color: white; 
+            border: none; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+            transition: transform 0.1s;
+        }
+        .btn-common:active { transform: scale(0.95); }
+
+        .confetti {
+            position: fixed;
+            z-index: 150;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            bottom: -20px;
+            left: 50%;
+        }
+
+        @keyframes confetti-cannon {
+            0% { transform: translate3d(0, 0, 0) rotateX(0) rotateY(0); opacity: 1; }
+            100% { transform: translate3d(var(--x), var(--y), 0) rotateX(var(--rx)) rotateY(var(--ry)); opacity: 0; }
+        }
+         /* --- KODE TAMBAHAN UNTUK STIKER MELAYANG --- */
+        .floating-sticker-wrap {
+            position: absolute;
+            bottom: -200px;
+            animation: float-up 10s linear infinite;
+            z-index: 5;
+            pointer-events: none;
+        }
+        .floating-sticker-img {
+            width: 70px;
+            height: auto;
+            border-radius: 12px;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <audio id="birthday-song" src="habede.mp3" preload="auto"></audio>
+
+    <div id="landing-1">
+        <div style="font-size: 4em; animation: float 3s infinite;">📩</div>
+        <h2 style="color: white; font-size: 1.3rem;">Pencet Ini Mba...</h2>
+        <button class="btn-common" onclick="goPrank()">Buka ✨</button>
+    </div>
+
+    <div id="landing-prank">
+        <div class="sticker-wle">😜</div>
+        <h1 style="color: #ff6b6b;">GAK ADA APA-APA SI WLEEEE!</h1>
+        <p>Kena tipu ya mba? Kasihan dehh WKWKWKWKWK...</p>
+    </div>
+
+    <div class="curtain-container" id="curtain-box">
+        <div class="curtain-left" id="left"></div>
+        <div class="curtain-right" id="right"></div>
+    </div>
+
+    <div id="extra-decor"></div>
+
+    <div class="main-content" id="main">
+        <div class="message-box">
+            <img src="1.jpeg" class="sticker s1" style="--rot: -15deg;" alt="sticker 1">
+            <img src="2.jpeg" class="sticker s2" style="--rot: 10deg;" alt="sticker 2">
+            <img src="3.jpeg" class="sticker s3" style="--rot: 15deg;" alt="sticker 3">
+            <img src="4.jpeg" class="sticker s4" style="--rot: 10deg;" alt="sticker 4">
+
+            <div class="cake-container" id="cake-btn">
+                <div class="cake-layer layer-bottom"><div class="drip"></div></div>
+                <div class="cake-layer layer-middle"><div class="drip"></div></div>
+                <div class="cake-layer layer-top"><div class="drip"></div></div>
+                <div class="candle">
+                    <div class="flame" id="flame-img"></div>
+                </div>
+            </div>
+            
+            <h1 style="color: #1b4d89;">Happy Birthdayy yaa mba Wilda Khairunnisaa! 🎉</h1>
+            <p>Selamat ulang tahun yaaw. Semoga di umur yang udah 20 TAHUN ini u nggak cuma nambah usia, tapi juga makin paham apa yang bikin u bahagia. Semoga hidup u lebih banyak ‘wah’ nya daripada ‘yah’ nya yaa tahun inii<br><b>Wish You All The Best</b>
+            <h2 style="color: #ff6b6b; font-size: 1.2rem;">Semoga Bahagia terus yaww! 😇 </h2>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('cake-btn').addEventListener('click', function() {
+            celebrate(50); 
+            const fl = document.getElementById('flame-img');
+            fl.classList.add('active-flame'); 
+            setTimeout(() => fl.classList.remove('active-flame'), 300);
+        });
+
+        function goPrank() {
+            document.getElementById('landing-1').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('landing-1').style.display = 'none';
+                document.getElementById('landing-prank').style.display = 'flex';
+                setTimeout(startRealSurprise, 1500);
+            }, 800);
+        }
+
+  function startRealSurprise() {
+            const song = document.getElementById('birthday-song');
+            document.getElementById('landing-prank').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('landing-prank').style.display = 'none';
+                document.getElementById('curtain-box').style.visibility = 'visible';
+                song.currentTime = 5; 
+                song.play().catch(e => console.log("Music blocked"));
+
+                setTimeout(() => {
+                    document.getElementById('left').classList.add('open-left');
+                    document.getElementById('right').classList.add('open-right');
+                    document.getElementById('main').style.opacity = '1';
+                    document.body.classList.add('active-content');
+                    
+                    addDecorations();    // Balon asli
+                    addFloatingStickers(); // Stiker melayang (TAMBAHAN)
+                    celebrate(150); 
+                }, 100);
+            }, 500);
+        }
+
+        // FUNGSI TAMBAHAN UNTUK STIKER MELAYANG
+        function addFloatingStickers() {
+            const decor = document.getElementById('extra-decor');
+            const images = ['1.jpeg', '2.jpeg', '3.jpeg', '4.jpeg', '5.jpeg', '6.jpeg'];
+            
+            for(let i = 0; i < 12; i++) {
+                const wrap = document.createElement('div');
+                wrap.className = 'floating-sticker-wrap';
+                
+                const img = document.createElement('img');
+                img.src = images[i % images.length];
+                img.className = 'floating-sticker-img';
+                
+                const randomSize = Math.random() * 50 + 50; 
+                img.style.width = randomSize + 'px';
+                img.style.transform = `rotate(${Math.random() * 40 - 20}deg)`;
+                
+                wrap.appendChild(img);
+                wrap.style.left = Math.random() * 90 + 'vw';
+                wrap.style.animationDuration = (Math.random() * 4 + 8) + 's';
+                wrap.style.animationDelay = (Math.random() * 10) + 's';
+                
+                decor.appendChild(wrap);
+            }
+        }
+
+        function addDecorations() {
+            const decor = document.getElementById('extra-decor');
+            const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#FF9F43', '#A29BFE'];
+            for(let i=0; i<8; i++) {
+                const wrap = document.createElement('div');
+                wrap.className = 'balloon-wrap';
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                wrap.innerHTML = `<div class="balloon" style="background-color: ${color}"></div><div class="string"></div>`;
+                wrap.style.left = Math.random() * 85 + 'vw';
+                wrap.style.animationDelay = Math.random() * 8 + 's';
+                decor.appendChild(wrap);
+            }
+        }
+
+        function celebrate(amount) {
+            const colors = ['#ffd700', '#ff6b6b', '#ffffff', '#3498db', '#a29bfe', '#2ecc71', '#e84393'];
+            for (let i = 0; i < amount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                const width = Math.random() * 8 + 4;
+                confetti.style.width = width + 'px';
+                confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                const x = (Math.random() - 0.5) * 1.5 * window.innerWidth + 'px';
+                const y = -(Math.random() * 90 + 30) + 'vh';
+                const rx = Math.random() * 1440 + 'deg'; 
+                const ry = Math.random() * 1440 + 'deg';
+                confetti.style.setProperty('--x', x);
+                confetti.style.setProperty('--y', y);
+                confetti.style.setProperty('--rx', rx);
+                confetti.style.setProperty('--ry', ry);
+                const duration = Math.random() * 3 + 4;
+                confetti.style.animation = `confetti-cannon ${duration}s cubic-bezier(0.1, 0.8, 0.4, 1) forwards`;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 8000);
+            }
+        }
+    </script>
+</body>
+</html>
